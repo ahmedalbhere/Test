@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>لوحة الحلاق</title>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+  <style>
+    body { font-family: sans-serif; background: #f9f9f9; padding: 2rem; }
+    .box { background: white; padding: 1rem; border-radius: 10px; max-width: 600px; margin: auto; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+    .queue-item {
+      display: flex; justify-content: space-between;
+      background: #eee; margin: 5px 0; padding: 10px;
+      border-radius: 6px;
+    }
+    button {
+      padding: 0.5rem 1rem;
+      background: #2196F3;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-top: 1rem;
+    }
+    .btn-danger { background: red; }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <h2>لوحة تحكم الحلاق</h2>
+    <p>الحالة: <span id="status">...</span>
+      <button onclick="toggleStatus()">تبديل</button>
+    </p>
+
+    <h3>قائمة الانتظار</h3>
+    <ul id="queueList"></ul>
+
+    <button class="btn-danger" onclick="logout()">🚪 خروج</button>
+  </div>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSy...", // أدخل بيانات مشروع Firebase
+      authDomain: "project-2980864980936907935.firebaseapp.com",
+      databaseURL: "https://project-2980864980936907935-default-rtdb.firebaseio.com",
+      projectId: "project-2980864980936907935",
+      storageBucket: "project-2980864980936907935.appspot.com",
+      messagingSenderId: "2980864980936907935",
+      appId: "1:2980864980936907935:web:xxxxxxxxxx"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    const barberId = localStorage.getItem("barberId");
+    if (!barberId) {
+      window.location.href = "barber-register.html";
+    }
+
+    const barberRef = db.ref("barbers/" + barberId);
+
+    function updateQueue() {
+      barberRef.child("queue").on("value", snap => {
+        const list = document.getElementById("queueList");
+        list.innerHTML = "";
+        const data = snap.val();
+        if (data) {
+          Object.entries(data).forEach(([key, val], index) => {
+            const li = document.createElement("li");
+            li.className = "queue-item";
+            li.innerHTML = `
+              ${index + 1}. ${val.name}
+              ${index === 0 ? '<button onclick="removeClient(\'' + key + '\')">إنهاء</button>' : ""}
+            `;
+            list.appendChild(li);
+          });
+        } else {
+          list.innerHTML = "<p>لا يوجد عملاء حالياً</p>";
+        }
+      });
+    }
+
+    function removeClient(key) {
+      barberRef.child("queue/" + key).remove();
+    }
+
+    function toggleStatus() {
+      barberRef.child("open").get().then(snap => {
+        barberRef.child("open").set(!snap.val());
+      });
+    }
+
+    function loadStatus() {
+      barberRef.child("open").on("value", snap => {
+        document.getElementById("status").textContent = snap.val() ? "مفتوح ✅" : "مغلق ❌";
+      });
+    }
+
+    function logout() {
+      localStorage.removeItem("barberId");
+      location.href = "index.html";
+    }
+
+    loadStatus();
+    updateQueue();
+  </script>
+</body>
+</html>
