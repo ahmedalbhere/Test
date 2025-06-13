@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>احجز عند الحلاق</title>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
@@ -43,13 +43,13 @@
 
   <script>
     const firebaseConfig = {
-      apiKey: "AIzaSy...", // 🔐 استبدل بمفتاحك
-      authDomain: "project-2980864980936907935.firebaseapp.com",
-      databaseURL: "https://project-2980864980936907935-default-rtdb.firebaseio.com",
-      projectId: "project-2980864980936907935",
-      storageBucket: "project-2980864980936907935.appspot.com",
-      messagingSenderId: "2980864980936907935",
-      appId: "1:2980864980936907935:web:xxxxxxxxxx"
+      apiKey: "AIzaSy...", // ← استبدل بمفتاحك
+      authDomain: "project-xxx.firebaseapp.com",
+      databaseURL: "https://project-xxx-default-rtdb.firebaseio.com",
+      projectId: "project-xxx",
+      storageBucket: "project-xxx.appspot.com",
+      messagingSenderId: "xxx",
+      appId: "xxx"
     };
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
@@ -60,8 +60,9 @@
     function loadBarbers() {
       const query = document.getElementById("searchArea").value.toLowerCase();
       db.ref("barbers").on("value", snap => {
-        container.innerHTML = "";
         const barbers = snap.val() || {};
+        container.innerHTML = "";
+
         Object.entries(barbers).forEach(([id, barber]) => {
           if (barber.area.toLowerCase().includes(query)) {
             const queue = barber.queue ? Object.values(barber.queue) : [];
@@ -74,7 +75,7 @@
               <h3>${barber.name} - ${barber.salon}</h3>
               <p>📍 ${barber.area}</p>
               <p>الحالة: ${isOpen ? "✅ مفتوح" : "❌ مغلق"}</p>
-              <p>المنتظرين: ${queue.length}</p>
+              <p>عدد المنتظرين: ${queue.length}</p>
               <a href="${barber.location}" target="_blank">🔗 موقع الصالون</a><br>
               <input id="name_${id}" placeholder="اكتب اسمك للحجز" ${!isOpen ? "disabled" : ""}>
               <button onclick="book('${id}')" ${!isOpen ? "disabled" : ""}>احجز الآن</button>
