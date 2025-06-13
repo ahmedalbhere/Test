@@ -8,7 +8,11 @@
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
   <style>
     body { font-family: sans-serif; background: #f9f9f9; padding: 2rem; }
-    .box { background: white; padding: 1rem; border-radius: 10px; max-width: 600px; margin: auto; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+    .box {
+      background: white; padding: 1rem; border-radius: 10px;
+      max-width: 600px; margin: auto;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
     .queue-item {
       display: flex; justify-content: space-between;
       background: #eee; margin: 5px 0; padding: 10px;
@@ -36,18 +40,18 @@
     <h3>قائمة الانتظار</h3>
     <ul id="queueList"></ul>
 
-    <button class="btn-danger" onclick="logout()">🚪 خروج</button>
+    <button class="btn-danger" onclick="logout()">🚪 تسجيل الخروج</button>
   </div>
 
   <script>
     const firebaseConfig = {
-      apiKey: "AIzaSy...", // أدخل بيانات مشروع Firebase
-      authDomain: "project-2980864980936907935.firebaseapp.com",
-      databaseURL: "https://project-2980864980936907935-default-rtdb.firebaseio.com",
-      projectId: "project-2980864980936907935",
-      storageBucket: "project-2980864980936907935.appspot.com",
-      messagingSenderId: "2980864980936907935",
-      appId: "1:2980864980936907935:web:xxxxxxxxxx"
+      apiKey: "AIzaSy...", // 🔐 استبدل بالقيم الصحيحة
+      authDomain: "project-xxx.firebaseapp.com",
+      databaseURL: "https://project-xxx-default-rtdb.firebaseio.com",
+      projectId: "project-xxx",
+      storageBucket: "project-xxx.appspot.com",
+      messagingSenderId: "xxx",
+      appId: "xxx"
     };
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
@@ -92,7 +96,7 @@
 
     function loadStatus() {
       barberRef.child("open").on("value", snap => {
-        document.getElementById("status").textContent = snap.val() ? "مفتوح ✅" : "مغلق ❌";
+        document.getElementById("status").textContent = snap.val() ? "✅ مفتوح" : "❌ مغلق";
       });
     }
 
